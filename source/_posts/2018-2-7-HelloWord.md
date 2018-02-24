@@ -12,5 +12,4 @@ function test(){
 }
 test();
 
-//OK
 ```

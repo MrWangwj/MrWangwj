@@ -79,4 +79,4 @@ theme: maupassant
 deploy: 
   type: git
   repo: git@github.com:MrWangwj/MrWangwj.git
-  branch: mastermastermaster
+  branch: master

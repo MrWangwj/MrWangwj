@@ -12,11 +12,15 @@
 
 > git checkout -b hexo origin/hexo
 
-### 4. 安装依赖
+### 4. 安装主题
+
+> git clone https://github.com/tufu9441/maupassant-hexo.git themes/maupassant
+
+### 5. 安装依赖
 
 > npm install
 
-### 5. 编译、查看、提交
+### 6. 编译、查看、提交
 
 > hexo g
 >
@@ -24,7 +28,7 @@
 >
 > hexo d
 
-### 6. 提交 markdown 文件
+### 7. 提交 markdown 文件
 
 > git add .
 >

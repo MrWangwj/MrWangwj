@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>MySQL中的事务及隔离级别 | 奔跑的蜗牛</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/normalize.css/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/pure-min.min.css"><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/purecss/build/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script><link rel="icon" mask sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"><script type="text/javascript" src="//cdn.jsdelivr.net/npm/clipboard/dist/clipboard.min.js"></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.js"></script><link rel="stylesheet" href="//cdn.jsdelivr.net/gh/codeseven/toastr/build/toastr.min.css"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">MySQL中的事务及隔离级别</h1><a id="logo" href="/.">奔跑的蜗牛</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">MySQL中的事务及隔离级别</h1><div class="post-meta">2018-04-18<span> | </span><span class="category"><a href="/categories/MySQL/">MySQL</a></span></div><div class="post-content"><blockquote>
+<p>MySQL中InnoDB 和 MyISAM存储引擎最大的区别是InnoDB支持事务和InnoDB为行级锁、MyISAM为表级锁</p>
+</blockquote>
+<h4 id="一、MySQL事务及其ACID属性"><a href="#一、MySQL事务及其ACID属性" class="headerlink" title="一、MySQL事务及其ACID属性"></a>一、MySQL事务及其ACID属性</h4><a id="more"></a>
+<ul>
+<li>原子性(Actomicity)：事务是一个原子操作单元，其对数据的修改，要么全都执行，要么全都不执行。</li>
+<li>一致性（Consistent）：在事务开始和完成时，数据都必须保持一致状态。这意味着所有相关的数据规则都必须应用于事务的修改，以操持完整性；事务结束时，所有的内部数据结构（如B树索引或双向链表）也都必须是正确的。</li>
+<li>隔离性（Isolation）：数据库系统提供一定的隔离机制，保证事务在不受外部并发操作影响的“独立”环境执行。这意味着事务处理过程中的中间状态对外部是不可见的，反之亦然。</li>
+<li>持久性（Durable）：事务完成之后，它对于数据的修改是永久性的，即使出现系统故障也能够保持。<h4 id="二、MySQL并行事务可能出现的问题"><a href="#二、MySQL并行事务可能出现的问题" class="headerlink" title="二、MySQL并行事务可能出现的问题"></a>二、MySQL并行事务可能出现的问题</h4></li>
+<li><strong>更新丢失：</strong>当两个或者多个事务选中同一行数据修改，由于不知道其他事务的存在，在事务提交后可能会发生更新丢失问题——最后的更新覆盖了其他事务所做的更新。</li>
+<li><strong>脏读：</strong>一个事务正在对一条记录做修改，在这个事务并提交前，这条记录的数据就处于不一致状态；这时，另一个事务也来读取同一条记录，如果不加控制，第二个事务读取了这些“脏”的数据，并据此做进一步的处理，就会产生未提交的数据依赖关系。这种现象被形象地叫做“脏读”。</li>
+<li><strong>不可重复读：</strong>是指在一个事务内，多次读同一数据。在这个事务还没有结束时，另外一个事务也访问该同一数据。那么，在第一个事务中的两次读数据之间，由于第二个事务的修改，那么第一个事务两次读到的的数据可能是不一样的。这样就发生了在一个事务内两次读到的数据是不一样的，因此称为是不可重复读。</li>
+<li><strong>幻读：</strong> 一个事务按相同的查询条件重新读取以前检索过的数据，却发现其他事务插入了满足其查询条件的新数据，这种现象就称为“幻读”。例如第一个事务对一个表中的数据进行了修改，这种修改涉及到表中的全部数据行。同时，第二个事务也修改这个表中的数据，这种修改是向表中插入一行新数据。那么，以后就会发生操作第一个事务的用户发现表中还有没有修改的数据行。</li>
+</ul>
+<h4 id="三、事务的隔离级别"><a href="#三、事务的隔离级别" class="headerlink" title="三、事务的隔离级别"></a>三、事务的隔离级别</h4><table>
+<thead>
+<tr>
+<th style="text-align:left">隔离级别</th>
+<th style="text-align:center">脏读</th>
+<th style="text-align:center">不可重复读</th>
+<th style="text-align:center">幻读</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Read uncommitted 读未提交</td>
+<td style="text-align:center">√</td>
+<td style="text-align:center">√</td>
+<td style="text-align:center">√</td>
+</tr>
+<tr>
+<td style="text-align:left">Read committed 读提交</td>
+<td style="text-align:center">×</td>
+<td style="text-align:center">√</td>
+<td style="text-align:center">√</td>
+</tr>
+<tr>
+<td style="text-align:left">Repeatable read 重复读</td>
+<td style="text-align:center">×</td>
+<td style="text-align:center">×</td>
+<td style="text-align:center">√</td>
+</tr>
+<tr>
+<td style="text-align:left">Serializable 序列化</td>
+<td style="text-align:center">×</td>
+<td style="text-align:center">×</td>
+<td style="text-align:center">×</td>
+</tr>
+</tbody>
+</table>
+<p>参考： <a href="https://blog.csdn.net/jiesa/article/details/51317164" target="_blank" rel="noopener"> 数据库事务隔离级别– 脏读、幻读、不可重复读清晰解释 </a></p>
+</div><div class="tags"></div><div class="post-nav"><a class="pre" href="/2018/07/22/2018-7-22-1/">浅谈JavaScript参数传递</a><a class="next" href="/2018/04/17/2018-4-17-1/">MySQL中MyISAM存储引擎和InnoDB存储引擎的区别</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://wangweijin.cn"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/JavaScript/">JavaScript</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/LeetCode/">LeetCode</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/MySQL/">MySQL</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/mysql/">mysql</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/教程/">教程</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/算法/">算法</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/github/" style="font-size: 15px;">github</a> <a href="/tags/test/" style="font-size: 15px;">test</a> <a href="/tags/PHP/" style="font-size: 15px;">PHP</a> <a href="/tags/对象复制/" style="font-size: 15px;">对象复制</a> <a href="/tags/php/" style="font-size: 15px;">php</a> <a href="/tags/ubuntu/" style="font-size: 15px;">ubuntu</a> <a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/优化存储/" style="font-size: 15px;">优化存储</a> <a href="/tags/搜索/" style="font-size: 15px;">搜索</a> <a href="/tags/全排列/" style="font-size: 15px;">全排列</a> <a href="/tags/排序/" style="font-size: 15px;">排序</a> <a href="/tags/参数传递/" style="font-size: 15px;">参数传递</a> <a href="/tags/BFS/" style="font-size: 15px;">BFS</a> <a href="/tags/链表/" style="font-size: 15px;">链表</a> <a href="/tags/数学/" style="font-size: 15px;">数学</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最近文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/07/12/2020-07-12-1/">2. 两数相加</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/22/2018-7-22-1/">浅谈JavaScript参数传递</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/18/2018-4-18-1/">MySQL中的事务及隔离级别</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/17/2018-4-17-1/">MySQL中MyISAM存储引擎和InnoDB存储引擎的区别</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/29/2018-03-29-1/">水管工游戏</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/28/2018-03-28-2/">层层递进-广度优先搜索算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/28/2018-03-28-1/">不撞南墙不回头-深度优先搜索算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/27/2018-03-27-01/">交换两个变量的值</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/09/2018-03-09-1/">Ubuntu 安装 最新版本的 PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/01/2018-03-01-1/">Mysql 高效的存储IPv4地址 inet_aton   inet_ntoa</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://www.example1.com/" title="site-name1" target="_blank">site-name1</a><ul></ul><a href="http://www.example2.com/" title="site-name2" target="_blank">site-name2</a><ul></ul><a href="http://www.example3.com/" title="site-name3" target="_blank">site-name3</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2020 <a href="/." rel="nofollow">奔跑的蜗牛.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox/dist/jquery.fancybox.min.css"><script type="text/javascript" src="/js/copycode.js" successtext="复制成功!"></script><link rel="stylesheet" type="text/css" href="/css/copycode.css"><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>

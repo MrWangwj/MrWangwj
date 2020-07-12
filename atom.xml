@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://wangweijin.cn/"/>
-  <updated>2020-07-11T17:03:44.229Z</updated>
+  <updated>2020-07-12T06:18:48.951Z</updated>
   <id>http://wangweijin.cn/</id>
   
   <author>
@@ -15,6 +15,40 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>3. 无重复字符的最长子串</title>
+    <link href="http://wangweijin.cn/2020/07/12/2020-07-12-2/"/>
+    <id>http://wangweijin.cn/2020/07/12/2020-07-12-2/</id>
+    <published>2020-07-12T06:10:58.000Z</published>
+    <updated>2020-07-12T06:18:48.951Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="一、题目"><a href="#一、题目" class="headerlink" title="一、题目"></a>一、题目</h1><p>LeetCode题目<a href="https://leetcode-cn.com/problems/longest-substring-without-repeating-characters" target="_blank" rel="noopener">《无重复字符的最长子串》</a></p><p>给定一个字符串，请你找出其中不含有重复字符的<strong>最长子串</strong>的长度。</p><p><strong>示例 1:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;abcabcbb&quot;</span><br><span class="line">输出: 3 </span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;abc&quot;，所以其长度为 3。</span><br></pre></td></tr></table></figure></p><p><strong>示例 2:</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;bbbbb&quot;</span><br><span class="line">输出: 1</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;b&quot;，所以其长度为 1。</span><br></pre></td></tr></table></figure><p><strong>示例 3:</strong></p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">输入: &quot;pwwkew&quot;</span><br><span class="line">输出: 3</span><br><span class="line">解释: 因为无重复字符的最长子串是 &quot;wke&quot;，所以其长度为 3。</span><br><span class="line">     请注意，你的答案必须是 子串 的长度，&quot;pwke&quot; 是一个子序列，不是子串。</span><br></pre></td></tr></table></figure><a id="more"></a><h1 id="二、代码"><a href="#二、代码" class="headerlink" title="二、代码"></a>二、代码</h1><figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">lengthOfLongestSubstring</span><span class="params">(s <span class="keyword">string</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">l, r,  n := <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">sLen := <span class="built_in">len</span>(s)</span><br><span class="line">m := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">byte</span>]<span class="keyword">struct</span>&#123;&#125;, sLen/<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> r &lt; sLen &#123;</span><br><span class="line"><span class="keyword">if</span> _, ok := m[s[r]]; !ok &#123;</span><br><span class="line">m[s[r]] = <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">r += <span class="number">1</span></span><br><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(m) &gt; n &#123;</span><br><span class="line">n = <span class="built_in">len</span>(m)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">continue</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">delete</span>(m, s[l])</span><br><span class="line">l += <span class="number">1</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> n</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h2 id="三、思路"><a href="#三、思路" class="headerlink" title="三、思路"></a>三、思路</h2><ul><li>滑动模块思想，当一段字符串无重复时，只需要保证新添加进来的字符串无重复，不需要要每次验证是否重复</li><li>使用map保存滑块，方便验证滑块是否存在重复</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;一、题目&quot;&gt;&lt;a href=&quot;#一、题目&quot; class=&quot;headerlink&quot; title=&quot;一、题目&quot;&gt;&lt;/a&gt;一、题目&lt;/h1&gt;&lt;p&gt;LeetCode题目&lt;a href=&quot;https://leetcode-cn.com/problems/longest-substring-without-repeating-characters&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;《无重复字符的最长子串》&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;给定一个字符串，请你找出其中不含有重复字符的&lt;strong&gt;最长子串&lt;/strong&gt;的长度。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;示例 1:&lt;/strong&gt;&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;输入: &amp;quot;abcabcbb&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;输出: 3 &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;解释: 因为无重复字符的最长子串是 &amp;quot;abc&amp;quot;，所以其长度为 3。&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;示例 2:&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;输入: &amp;quot;bbbbb&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;输出: 1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;解释: 因为无重复字符的最长子串是 &amp;quot;b&amp;quot;，所以其长度为 1。&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;strong&gt;示例 3:&lt;/strong&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;输入: &amp;quot;pwwkew&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;输出: 3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;解释: 因为无重复字符的最长子串是 &amp;quot;wke&amp;quot;，所以其长度为 3。&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;     请注意，你的答案必须是 子串 的长度，&amp;quot;pwke&amp;quot; 是一个子序列，不是子串。&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+      <category term="LeetCode" scheme="http://wangweijin.cn/categories/LeetCode/"/>
+    
+    
+      <category term="哈希表" scheme="http://wangweijin.cn/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/"/>
+    
+      <category term="双指针" scheme="http://wangweijin.cn/tags/%E5%8F%8C%E6%8C%87%E9%92%88/"/>
+    
+      <category term="字符串" scheme="http://wangweijin.cn/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
+    
+      <category term="Sliding Window" scheme="http://wangweijin.cn/tags/Sliding-Window/"/>
+    
+  </entry>
   
   <entry>
     <title>2. 两数相加</title>
